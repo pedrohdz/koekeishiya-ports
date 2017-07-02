@@ -2,25 +2,30 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-name                chunkwm-core
-
-github.setup        koekeishiya chunkwm core-0.1.0
+github.setup        koekeishiya chunkwm 1de169e3a55746887fb362c5151a9d4c1647a6d7
+version             0.2.2
 categories          aqua
 platforms           darwin
 license             MIT
 
-maintainers         @koekeishiya
+maintainers         gmail.com:terinjokes
 description         Tiling window manager for MacOS based on plugin architecture
 long_description    ${name}: ${description}
 
 homepage            https://github.com/koekeishiya/chunkwm
-checksums           rmd160  d4dcfdee4ac86630ee5b310ab1159264b69efc29 \
-                    sha256  a92e92979441d42ac652e0bb17233e2b832bcbd19c7ab13e33352c8633bdc325
+checksums           rmd160  0537be8a40909828e665166a83b76dad2dd9bbc4 \
+                    sha256  c015988e7586adf3d8b97f13e3e99b404d613f627206e0a6d53b11b4a6b7c74d
 
 supported_archs     x86_64
 use_configure       no
 
-set plist-name      com.koekeishiya.chunkwm.plist
+default_variants        +border +tiling
+variant border          description {Builds "border" plugin} {}
+variant ffm             description {Builds "focus follows mouse" plugin} {}
+variant tiling          description {Builds "tiling" plugin} {}
+variant transparency    description {Builds "transparency" plugin} {}
+
+set plist-name          com.koekeishiya.chunkwm.plist
 
 post-extract {
     file copy -force ${filespath}/${plist-name} ${worksrcpath}
@@ -31,14 +36,30 @@ post-extract {
 build {
     system "cd ${worksrcpath} && make install"
     system "cd ${worksrcpath}/src/chunkc && make"
+
+    if {[variant_isset border]} {
+        system "cd ${worksrcpath}/src/plugins/border && make install"
+    }
+
+    if {[variant_isset ffm]} {
+        system "cd ${worksrcpath}/src/plugins/ffm && make install"
+    }
+
+    if {[variant_isset tiling]} {
+        system "cd ${worksrcpath}/src/plugins/tiling && make install"
+    }
+
+    if {[variant_isset transparency]} {
+        system "cd ${worksrcpath}/src/plugins/transparency && make install"
+    }
 }
 
 destroot {
-    xinstall -d -m 755 ${destroot}${prefix}/lib/chunkwm/plugins
-    touch ${destroot}${prefix}/lib/chunkwm/plugins/.dir_created
-
     xinstall -m 755 ${worksrcpath}/bin/chunkwm ${destroot}${prefix}/bin/chunkwm
     xinstall -m 755 ${worksrcpath}/src/chunkc/bin/chunkc ${destroot}${prefix}/bin/chunkc
+
+    xinstall -d -m 755 ${destroot}${prefix}/lib/chunkwm/plugins
+    xinstall -m 644 {*}[glob ${worksrcpath}/plugins/*] ${destroot}${prefix}/lib/chunkwm/plugins
 
     xinstall -d -m 755 ${destroot}${prefix}/Library/LaunchAgents
     xinstall -m 644 ${worksrcpath}/${plist-name} ${destroot}${prefix}/Library/LaunchAgents
