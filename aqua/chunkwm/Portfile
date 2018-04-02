@@ -2,8 +2,8 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        koekeishiya chunkwm 0.3.3 v
-version             0.3.3
+github.setup        koekeishiya chunkwm 0.3.4 v
+version             0.3.4
 categories          aqua
 platforms           darwin
 license             MIT
@@ -13,8 +13,8 @@ description         Tiling window manager for MacOS based on plugin architecture
 long_description    ${name}: ${description}
 
 homepage            https://github.com/koekeishiya/chunkwm
-checksums           rmd160  d9e8a2782abe6b239920f63919682608f5d2cdda \
-                    sha256  fd98193da11d472578867ef29ea4844ff6a48bab413b4aadba293dd4a44e1677
+checksums           rmd160  897e9654e0c1f3c16a6e83e44cd377d59ceff46b \
+                    sha256  35ebb9a4755609c46658a63da7594878e0b335cb0d9b33c67dd0f583ba0586e3
 
 supported_archs     x86_64
 use_configure       no
@@ -23,7 +23,6 @@ default_variants        +border +tiling
 variant border          description {Builds "border" plugin} {}
 variant ffm             description {Builds "focus follows mouse" plugin} {}
 variant tiling          description {Builds "tiling" plugin} {}
-variant transparency    description {Builds "transparency" plugin} {}
 
 set plist-name          com.koekeishiya.chunkwm.plist
 
@@ -47,10 +46,6 @@ build {
 
     if {[variant_isset tiling]} {
         system "cd ${worksrcpath}/src/plugins/tiling && make install"
-    }
-
-    if {[variant_isset transparency]} {
-        system "cd ${worksrcpath}/src/plugins/transparency && make install"
     }
 }
 
