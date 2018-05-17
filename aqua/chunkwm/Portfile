@@ -2,8 +2,8 @@
 PortSystem          1.0
 PortGroup           github 1.0
 
-github.setup        koekeishiya chunkwm 0.3.6 v
-version             0.3.6
+github.setup        koekeishiya chunkwm 0.3.7 v
+version             0.3.7
 categories          aqua
 platforms           darwin
 license             MIT
@@ -13,8 +13,8 @@ description         Tiling window manager for MacOS based on plugin architecture
 long_description    ${name}: ${description}
 
 homepage            https://github.com/koekeishiya/chunkwm
-checksums           rmd160  667c58c2a83732fe55a3ad036a3369e22ba16165 \
-                    sha256  17696b32ea5178353e455baf0ddccf77f3fbe190a0e60a5329fba631a3aabe51
+checksums           rmd160  16e485acd429e8d9d28f8a1beecc0e2690b008da \
+                    sha256  d0445d331567ba78940af92c8cc6a19e334f76efaa0c1dcaa405d283b46268a0 \
 
 supported_archs     x86_64
 use_configure       no
