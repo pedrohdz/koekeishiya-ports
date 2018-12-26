@@ -1,0 +1,49 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+PortSystem          1.0
+PortGroup           github 1.0
+
+github.setup        koekeishiya skhd 0.3.0 v
+version             0.3.0
+categories          aqua
+platforms           darwin
+license             MIT
+
+maintainers         gmail.com:pedro.codez
+description         A simple hotkey daemon for macOS
+long_description    ${name}: ${description}
+
+homepage            https://github.com/koekeishiya/skhd
+checksums           rmd160  463e6b40da10d6bae73b980d1206a807b4f02c14 \
+                    sha256  3618df273bb71f31f1930a094694139cb0a65de093c9ab27eb8bc53b0afc0de6 \
+                    size    20260
+
+supported_archs     x86_64
+use_configure       no
+
+set plist-name      com.koekeishiya.skhd.plist
+
+post-extract {
+    file copy -force ${filespath}/${plist-name} ${worksrcpath}
+    reinplace "s|{PREFIX}|${prefix}|g" ${worksrcpath}/${plist-name}
+}
+
+destroot {
+    xinstall -m 755 ${worksrcpath}/bin/skhd ${destroot}${prefix}/bin/skhd
+
+    xinstall -d -m 755 ${destroot}${prefix}/Library/LaunchAgents
+    xinstall -m 644 ${worksrcpath}/${plist-name} ${destroot}${prefix}/Library/LaunchAgents
+
+    xinstall -d -m 755 ${destroot}${prefix}/share/${name}
+    xinstall -m 644 ${worksrcpath}/examples/skhdrc ${destroot}${prefix}/share/${name}/skhdrc
+}
+
+notes "******************************************************
+To start using skhd, follow these instructions:
+  1) Copy the example config from ${prefix}/share/${name}/skhdrc
+     into your home directory:
+    cp ${prefix}/share/${name}/skhdrc ~/.skhdrc
+  2) Symlink prepared agent and start it:
+    cd ~/Library/LaunchAgents
+    ln -s ${prefix}/Library/LaunchAgents/${plist-name}
+    launchctl load -w ~/Library/LaunchAgents/${plist-name}
+******************************************************"
